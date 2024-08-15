@@ -19,6 +19,7 @@ public class ctrlMenu implements MouseListener, KeyListener{
         this.vistaMenu = frmMenu;
         
         frmMenu.btnGuardar.addMouseListener(this);
+        frmMenu.jtbMenu.addMouseListener(this);
         
         modeloMenu.Mostrar(vistaMenu.jtbMenu);
     }
@@ -36,6 +37,12 @@ public class ctrlMenu implements MouseListener, KeyListener{
                 modeloMenu.Guardar();
                 modeloMenu.Mostrar(vistaMenu.jtbMenu);
                 
+        }
+        
+        if(e.getSource() == vistaMenu.btnEliminar){
+
+            modeloMenu.Eliminar(vistaMenu.jtbMenu);
+            modeloMenu.Mostrar(vistaMenu.jtbMenu);
         }
        
      
