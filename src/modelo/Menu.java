@@ -2,6 +2,8 @@ package modelo;
 
 import java.sql.*;
 import java.util.UUID;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 public class Menu {
     String UUID_menu;
@@ -41,13 +43,13 @@ public class Menu {
         this.ingredientes = ingredientes;
     }
     
-    //metodos
+    //3. Métodos
       public void Guardar() {
         //Creamos una variable igual a ejecutar el método de la clase de conexión
         Connection conexion = ClaseConexion.getConexion();
         try {
             //Creamos el PreparedStatement que ejecutará la Query
-            PreparedStatement addMenu = conexion.prepareStatement("INSERT INTO tbCRUD(UUID, Nombre, Edad, Especialidad) VALUES (?, ?, ?, ?)");
+            PreparedStatement addMenu = conexion.prepareStatement("INSERT INTO tbmenu(UUID_menu, Nombre, Precio, Ingredientes) VALUES (?, ?, ?, ?)");
             //Establecer valores de la consulta SQL
             addMenu.setString(1, UUID.randomUUID().toString());
             addMenu.setString(2, getNombre());
@@ -61,4 +63,32 @@ public class Menu {
             System.out.println("este es el error en el modelo:metodo guardar " + ex);
         }
     }
+      
+    
+         public void Mostrar(JTable tabla) {
+        //Creamos una variable de la clase de conexion
+        Connection conexion = ClaseConexion.getConexion();
+        //Definimos el modelo de la tabla
+        DefaultTableModel modeloTacos = new DefaultTableModel();
+        modeloTacos.setColumnIdentifiers(new Object[]{"UUID_menu", "Nombre", "Precio", "Ingredientes"});
+        try {
+            //Creamos un Statement
+            Statement statement = conexion.createStatement();
+            //Ejecutamos el Statement con la consulta y lo asignamos a una variable de tipo ResultSet
+            ResultSet rs = statement.executeQuery("SELECT * FROM tbmenu");
+            //Recorremos el ResultSet
+            while (rs.next()) {
+                //Llenamos el modelo por cada vez que recorremos el resultSet
+                modeloTacos.addRow(new Object[]{rs.getString("UUID_menu"), 
+                    rs.getString("nombre"), 
+                    rs.getInt("precio"), 
+                    rs.getString("ingredientes")});
+            }
+            //Asignamos el nuevo modelo lleno a la tabla
+            tabla.setModel(modeloTacos);
+        } catch (Exception e) {
+            System.out.println("Este es el error en el modelo, metodo mostrar " + e);
+        }
+    }
+    
 }
